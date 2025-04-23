@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 import datetime
+from django.contrib import admin
 
 # Create your models here.
 #create a question model(a question has a question and a publication date)
@@ -12,6 +13,17 @@ class Question (models.Model):
     def __str__(self):
         return self.question_text
     
+    def was_published_recently(self):
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
+    
+    #improve the display() decorator on that method (extending the polls/models.py file) and importing admin from contrib
+    @admin.display(
+        boolean=True,
+        ordering="pub_date",
+        description="Published recently?",
+    )
+
     def was_published_recently(self):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
